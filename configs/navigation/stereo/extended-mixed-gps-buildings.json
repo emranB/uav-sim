@@ -1,0 +1,98 @@
+{
+  "schema_version": 1,
+  "goal_offset_enu_m": [
+    -7.5,
+    0
+  ],
+  "texture_seed": 101,
+  "lighting_scale": 1,
+  "obstacles": [
+    {
+      "center_enu_m": [
+        12,
+        1,
+        4
+      ],
+      "size_m": [
+        0.4,
+        22,
+        8
+      ]
+    },
+    {
+      "center_enu_m": [
+        -12,
+        1,
+        4
+      ],
+      "size_m": [
+        0.4,
+        22,
+        8
+      ]
+    },
+    {
+      "center_enu_m": [
+        0,
+        12,
+        4
+      ],
+      "size_m": [
+        24,
+        0.4,
+        8
+      ]
+    },
+    {
+      "center_enu_m": [
+        0,
+        -10,
+        4
+      ],
+      "size_m": [
+        24,
+        0.4,
+        8
+      ]
+    }
+  ],
+  "ground_texture_seed": 2600,
+  "inspection_buildings": [
+    {
+      "center_enu_m": [
+        -3,
+        4,
+        3.0
+      ],
+      "scale_xyz": [
+        0.125,
+        0.125,
+        0.5
+      ]
+    },
+    {
+      "center_enu_m": [
+        5,
+        4,
+        3.0
+      ],
+      "scale_xyz": [
+        0.125,
+        0.125,
+        0.5
+      ]
+    },
+    {
+      "center_enu_m": [
+        7,
+        -4,
+        3.0
+      ],
+      "scale_xyz": [
+        0.125,
+        0.125,
+        0.5
+      ]
+    }
+  ]
+}

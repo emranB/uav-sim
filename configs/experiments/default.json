@@ -1,0 +1,1 @@
+{"schema_version":1,"name":"single-vehicle-baseline","vehicle":"configs/vehicles/default.json","world":"default","mission":null,"seed":0,"ros_domain_id":42,"use_sim_time":true,"versions":{},"determinism":"unverified"}

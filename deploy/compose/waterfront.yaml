@@ -1,0 +1,42 @@
+# Apply after inspection and mapping overlays. Terrain must be prepared first.
+x-waterfront: &waterfront
+  UAV_WORLD_LOCATION: /workspace/outputs/terrain/waterfront/location.json
+services:
+  gazebo:
+    environment:
+      <<: *waterfront
+      UAV_SCENE: waterfront
+      UAV_TERRAIN_DIR: /workspace/outputs/terrain/waterfront
+      UAV_CAMERA_WIDTH: '640'
+      UAV_CAMERA_HEIGHT: '480'
+      UAV_CAMERA_FOV_RAD: '1.4'
+      UAV_CAMERA_BASELINE_M: '0.4'
+      UAV_CAMERA_PITCH_RAD: ${UAV_CAMERA_PITCH_RAD:-0.7}
+      UAV_CAMERA_HEIGHT_M: '0.5'
+      UAV_REAL_TIME_FACTOR: ${UAV_REAL_TIME_FACTOR:-0.2}
+      UAV_CAMERA_RATE_HZ: ${UAV_CAMERA_RATE_HZ:-10}
+  live-mapping:
+    environment:
+      UAV_SLAM_LEVELS: ${UAV_SLAM_LEVELS:-12}
+  control-panel:
+    environment:
+      <<: *waterfront
+      UAV_SCENE: waterfront
+      UAV_HEARTBEAT_TIMEOUT_SECONDS: ${UAV_HEARTBEAT_TIMEOUT_SECONDS:-10}
+      UAV_REAL_TIME_FACTOR: ${UAV_REAL_TIME_FACTOR:-0.2}
+  px4:
+    environment: *waterfront
+  px4-second:
+    environment: *waterfront
+  qgroundcontrol:
+    environment: *waterfront
+  camera-streams:
+    environment:
+      UAV_RECORD_LIMIT_PAIRS: ${UAV_RECORD_LIMIT_PAIRS:-1}
+      UAV_CAMERA_WIDTH: '640'
+      UAV_CAMERA_HEIGHT: '480'
+      UAV_CAMERA_FOV_RAD: '1.4'
+      UAV_CAMERA_BASELINE_M: '0.4'
+      UAV_CAMERA_PITCH_RAD: ${UAV_CAMERA_PITCH_RAD:-0.7}
+      UAV_CAMERA_HEIGHT_M: '0.5'
+      UAV_CAMERA_RATE_HZ: ${UAV_CAMERA_RATE_HZ:-10}

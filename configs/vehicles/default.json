@@ -1,0 +1,1 @@
+{"schema_version":1,"vehicle_id":"vehicle_1","flight_controller":"px4_sitl","model":"x500","mavlink_system_id":1,"ros_namespace":"/vehicle_1","sensors":{},"interference":{},"mission":null}

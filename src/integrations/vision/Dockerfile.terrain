@@ -1,0 +1,7 @@
+FROM uav-sim-vision-base:development
+USER root
+RUN python -m pip install --no-cache-dir rasterio==1.4.4 pyproj==3.7.2
+COPY src/common /workspace/src/common
+COPY src/integrations/vision /workspace/src/integrations/vision
+USER app
+CMD ["python", "-m", "integrations.vision.terrain", "--help"]

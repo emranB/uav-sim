@@ -1,0 +1,9 @@
+# Optional CUDA surface backend; the ordinary mapping image remains CPU-only.
+ARG UAV_MAPPING_BASE=uav-sim-mapping:development
+FROM ${UAV_MAPPING_BASE}
+USER root
+ADD --checksum=sha256:529cd40012ba7070b9ec3f8c7214ae2dbc77696af069e6e2ee8989fbd79e7011 https://repo.download.nvidia.com/jetson/x86_64/noble/pool/main/libn/libnvvpi4/libnvvpi4_4.1.4_amd64.deb /tmp/vpi-library.deb
+ADD --checksum=sha256:3aad3c98002d529673d8d4991e68cd12583873958e19210ed0f8c13f153421e7 https://repo.download.nvidia.com/jetson/x86_64/noble/pool/main/p/python3.12-vpi4/python3.12-vpi4_4.1.4_amd64.deb /tmp/vpi-python.deb
+RUN dpkg -i /tmp/vpi-library.deb /tmp/vpi-python.deb && \
+    rm /tmp/vpi-library.deb /tmp/vpi-python.deb
+USER app

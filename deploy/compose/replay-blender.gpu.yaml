@@ -1,0 +1,16 @@
+# Optional offline graphics access. Live services receive no additional devices.
+services:
+  replay-renderer:
+    cpus: 4
+    mem_limit: 4g
+    gpus: all
+    environment:
+      UAV_REPLAY_ENGINE: BLENDER_EEVEE_NEXT
+      UAV_REPLAY_COMPUTE: OPTIX
+      UAV_REPLAY_RENDER_WIDTH: 1600
+      UAV_REPLAY_RENDER_HEIGHT: 900
+      UAV_REPLAY_RENDER_SAMPLES: 16
+      NVIDIA_DRIVER_CAPABILITIES: graphics,compute,utility
+      __NV_PRIME_RENDER_OFFLOAD: '1'
+      __GLX_VENDOR_LIBRARY_NAME: nvidia
+      __EGL_VENDOR_LIBRARY_FILENAMES: /usr/share/glvnd/egl_vendor.d/10_nvidia.json

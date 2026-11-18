@@ -1,0 +1,124 @@
+{
+  "fileType": "Plan",
+  "version": 1,
+  "groundStation": "QGroundControl",
+  "mission": {
+    "version": 2,
+    "firmwareType": 12,
+    "vehicleType": 2,
+    "cruiseSpeed": 3,
+    "hoverSpeed": 3,
+    "plannedHomePosition": [
+      44.6488,
+      -63.5752,
+      20
+    ],
+    "items": [
+      {
+        "type": "SimpleItem",
+        "command": 22,
+        "frame": 3,
+        "autoContinue": true,
+        "doJumpId": 1,
+        "params": [
+          0,
+          0,
+          0,
+          null,
+          44.6488,
+          -63.5752,
+          8
+        ]
+      },
+      {
+        "type": "SimpleItem",
+        "command": 16,
+        "frame": 3,
+        "autoContinue": true,
+        "doJumpId": 2,
+        "params": [
+          0,
+          0,
+          0,
+          null,
+          44.648961696751144,
+          -63.575023222892476,
+          8
+        ]
+      },
+      {
+        "type": "SimpleItem",
+        "command": 16,
+        "frame": 3,
+        "autoContinue": true,
+        "doJumpId": 3,
+        "params": [
+          0,
+          0,
+          0,
+          null,
+          44.649195258725015,
+          -63.575023222892476,
+          8
+        ]
+      },
+      {
+        "type": "SimpleItem",
+        "command": 16,
+        "frame": 3,
+        "autoContinue": true,
+        "doJumpId": 4,
+        "params": [
+          0,
+          0,
+          0,
+          null,
+          44.649195258725015,
+          -63.57537677710753,
+          8
+        ]
+      },
+      {
+        "type": "SimpleItem",
+        "command": 16,
+        "frame": 3,
+        "autoContinue": true,
+        "doJumpId": 5,
+        "params": [
+          0,
+          0,
+          0,
+          null,
+          44.6488,
+          -63.57537677710753,
+          8
+        ]
+      },
+      {
+        "type": "SimpleItem",
+        "command": 21,
+        "frame": 3,
+        "autoContinue": true,
+        "doJumpId": 6,
+        "params": [
+          0,
+          0,
+          0,
+          null,
+          44.6488,
+          -63.5752,
+          0
+        ]
+      }
+    ]
+  },
+  "geoFence": {
+    "version": 2,
+    "circles": [],
+    "polygons": []
+  },
+  "rallyPoints": {
+    "version": 2,
+    "points": []
+  }
+}

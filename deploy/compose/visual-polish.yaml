@@ -1,0 +1,8 @@
+# Visual-only authored pad details; collision, dynamics and geographic frames are unchanged.
+services:
+  gazebo:
+    environment:
+      UAV_VISUAL_POLISH: 'true'
+  control-panel:
+    environment:
+      UAV_VISUAL_POLISH: 'true'

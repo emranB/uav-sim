@@ -1,0 +1,169 @@
+name: uav-sim
+x-runtime: &runtime
+  image: uav-sim-stack:development
+  build:
+    context: .
+    dockerfile: src/integrations/px4/Dockerfile
+    target: runtime
+  init: true
+  stop_grace_period: 15s
+  environment: &environment
+    PYTHONPATH: /workspace/src
+    OUTPUT_DIR: /workspace/outputs
+    UAV_STORAGE_RESERVE_BYTES: ${UAV_STORAGE_RESERVE_BYTES:-2147483648}
+    UAV_RUN_RECORDING_BUDGET_BYTES: ${UAV_RUN_RECORDING_BUDGET_BYTES:-2147483648}
+    UAV_PX4_LOG_MODE: ${UAV_PX4_LOG_MODE:-armed}
+    UAV_DDS_TIME_SOURCE: ${UAV_DDS_TIME_SOURCE:-simulation}
+    UAV_TELEMETRY_IDLE_SEGMENT_BYTES: ${UAV_TELEMETRY_IDLE_SEGMENT_BYTES:-16777216}
+    UAV_TELEMETRY_IDLE_SEGMENTS: ${UAV_TELEMETRY_IDLE_SEGMENTS:-2}
+    UAV_RENDER_MODE: ${UAV_RENDER_MODE:-cpu}
+    UAV_HEADLESS: ${UAV_HEADLESS:-false}
+    ROS_DOMAIN_ID: ${ROS_DOMAIN_ID:-42}
+    RMW_IMPLEMENTATION: ${RMW_IMPLEMENTATION:-rmw_fastrtps_cpp}
+    FASTRTPS_DEFAULT_PROFILES_FILE: /workspace/configs/runtime/fastdds.xml
+    GZ_PARTITION: uav-sim
+    GZ_IP: 127.0.0.1
+    QT_QPA_PLATFORM: xcb
+    QT_X11_NO_MITSHM: '1'
+    DISPLAY: ${DISPLAY:-:0}
+  volumes: &volumes
+    - ./src:/workspace/src:ro
+    - ./configs:/workspace/configs
+    - ${OUTPUTS_PATH:-./outputs}:/workspace/outputs
+    - runtime:/runtime
+services:
+  simulation-network:
+    image: python:3.11-slim@sha256:65bd3d9f1d7fa268dd1909973ba7eb4bdf41f6dcf2cfbe76ba9528b170f3fd79
+    command: ['python', '-c', 'import time; time.sleep(1000000000)']
+    init: true
+    ports:
+      - '127.0.0.1:${BACKEND_PORT:-18080}:8080'
+  gazebo:
+    <<: *runtime
+    command: python -m gazebo.launcher server
+    network_mode: service:simulation-network
+    depends_on:
+      simulation-network:
+        condition: service_started
+    healthcheck:
+      test: ['CMD-SHELL', 'gz topic -l | grep -q /world/default/clock']
+      interval: 5s
+      timeout: 5s
+      retries: 30
+      start_period: 10s
+  px4:
+    <<: *runtime
+    command: python -m integrations.px4.fleet_runtime
+    environment:
+      <<: *environment
+      UAV_INSTANCE_GROUP: primary
+    network_mode: service:simulation-network
+    depends_on:
+      gazebo:
+        condition: service_healthy
+  control-panel:
+    <<: *runtime
+    command: python -m common.simulation_manager.server
+    network_mode: service:simulation-network
+    depends_on:
+      px4:
+        condition: service_started
+      px4-second:
+        condition: service_started
+    healthcheck:
+      test: ['CMD', 'python', '-c', "import urllib.request; urllib.request.urlopen('http://localhost:8080/health')"]
+      interval: 5s
+      timeout: 3s
+      retries: 60
+      start_period: 15s
+  px4-second:
+    <<: *runtime
+    command: python -m integrations.px4.fleet_runtime
+    environment:
+      <<: *environment
+      UAV_INSTANCE_GROUP: secondary
+    network_mode: service:simulation-network
+    depends_on:
+      gazebo:
+        condition: service_healthy
+  gazebo-viewer:
+    <<: *runtime
+    restart: "on-failure:3"
+    command: python -m gazebo.launcher viewer
+    network_mode: service:simulation-network
+    depends_on:
+      gazebo:
+        condition: service_healthy
+  qgroundcontrol:
+    <<: *runtime
+    image: uav-sim-qgroundcontrol:5.1.5
+    build:
+      context: .
+      dockerfile: src/integrations/px4/Dockerfile
+      target: qgroundcontrol
+    command: python -m qgroundcontrol.launcher
+    volumes:
+      - ./src:/workspace/src:ro
+      - ./configs:/workspace/configs
+      - ${OUTPUTS_PATH:-./outputs}:/workspace/outputs
+      - runtime:/runtime
+      - ${OUTPUTS_PATH:-./outputs}/qgroundcontrol:/home/app/.config/QGroundControl
+    network_mode: service:simulation-network
+    depends_on:
+      px4:
+        condition: service_started
+  desktop:
+    <<: *runtime
+    command: python -m desktop.main
+    network_mode: service:simulation-network
+    depends_on:
+      control-panel:
+        condition: service_started
+      qgroundcontrol:
+        condition: service_started
+      gazebo-viewer:
+        condition: service_started
+  dds-agent:
+    <<: *runtime
+    image: uav-sim-ros2:development
+    build:
+      context: .
+      dockerfile: src/integrations/px4/Dockerfile
+      target: ros2
+    command: ['bash', '-lc', 'source /opt/ros/jazzy/setup.bash && MicroXRCEAgent udp4 -p 8888']
+    network_mode: service:simulation-network
+    depends_on:
+      gazebo:
+        condition: service_started
+  ros2-monitor:
+    <<: *runtime
+    image: uav-sim-ros2:development
+    build:
+      context: .
+      dockerfile: src/integrations/px4/Dockerfile
+      target: ros2
+    command: ['bash', '-lc', 'source /opt/ros/jazzy/setup.bash && source /opt/ros-workspace/install/setup.bash && python -m integrations.ros2.monitor']
+    network_mode: service:simulation-network
+    depends_on:
+      dds-agent:
+        condition: service_started
+    healthcheck:
+      test: ['CMD', 'python', '-c', "import json,time; from pathlib import Path; s=json.loads(Path('/runtime/ros2.json').read_text()); assert time.time()-s['received_wall_time'] < 3 and s['xy_valid'] and s['z_valid']"]
+      interval: 5s
+      timeout: 3s
+      retries: 30
+      start_period: 15s
+  ros2-clock:
+    <<: *runtime
+    image: uav-sim-ros2:development
+    build:
+      context: .
+      dockerfile: src/integrations/px4/Dockerfile
+      target: ros2
+    command: ['bash', '-lc', 'source /opt/ros/jazzy/setup.bash && ros2 run ros_gz_bridge parameter_bridge /clock@rosgraph_msgs/msg/Clock[gz.msgs.Clock']
+    network_mode: service:simulation-network
+    depends_on:
+      gazebo:
+        condition: service_healthy
+volumes:
+  runtime:

@@ -1,0 +1,14 @@
+# Explicit static, fixed-altitude simulation-only range navigation. Apply last.
+services:
+  gazebo:
+    environment:
+      UAV_SCENE: default
+      UAV_NAVIGATION: 'true'
+      UAV_AVOIDANCE_SCENARIO: /workspace/configs/navigation/${UAV_AVOIDANCE_SCENARIO:-single}.json
+  control-panel:
+    environment:
+      UAV_SCENE: default
+      UAV_NAVIGATION: 'true'
+  desktop:
+    environment:
+      UAV_NAVIGATION: 'true'

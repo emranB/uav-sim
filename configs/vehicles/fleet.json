@@ -1,0 +1,7 @@
+{
+  "schema_version": 1,
+  "vehicles": [
+    {"vehicle_id": "vehicle_1", "label": "Atlas", "instance": 0, "system_id": 1, "vehicle_port": 14540, "application_port": 14640, "spawn_enu_m": [0, 0, 0.1]},
+    {"vehicle_id": "vehicle_2", "label": "Boreal", "instance": 1, "system_id": 2, "vehicle_port": 14541, "application_port": 14641, "spawn_enu_m": [6, 0, 0.1]}
+  ]
+}

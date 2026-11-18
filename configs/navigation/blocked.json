@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "goal_offset_enu_m": [
+    0,
+    14
+  ],
+  "obstacles": [
+    {
+      "center_enu_m": [
+        0,
+        14,
+        4
+      ],
+      "size_m": [
+        6,
+        6,
+        8
+      ]
+    }
+  ]
+}

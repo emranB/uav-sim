@@ -1,0 +1,32 @@
+#!/bin/sh
+set -eu
+case_name="$1"
+stamp=$(date +%s%N)
+docker compose exec -T -e CASE_NAME="$case_name" control-panel python -c '
+import json, os, time, urllib.request
+consecutive=0
+for _ in range(240):
+    try:
+        response=urllib.request.urlopen("http://127.0.0.1:8080/navigation?vehicle_id=vehicle_1",timeout=1)
+        snapshot=json.load(response)["visual_localization"]
+        state, stream=snapshot["aiding"], snapshot["pose"]
+        now=time.monotonic()
+        assert state["controller_run_id"]==stream["controller_run_id"]
+        assert 0<=now-state["monotonic"]<=.5 and 0<=now-stream["monotonic"]<=.25
+        assert state["vision_xy_active"] and state["capture_stamp_valid"] and stream["healthy"]
+        if os.environ["CASE_NAME"] == "gps-loss":
+            assert state["gps_fix_type"]>=3 and state["gnss_xy_active"]
+        else:
+            assert state["gps_fix_type"]==0 and not state["gnss_xy_active"]
+        assert state["vision_height_active"] and state["arming_state"]==1
+        consecutive += 1
+        if consecutive == 8:
+            print(json.dumps(state))
+            break
+    except (RuntimeError, OSError, AssertionError, KeyError, ValueError):
+        consecutive=0
+    time.sleep(.25)
+else:
+    raise SystemExit("Synchronized visual aiding did not qualify within 60 seconds")
+'
+exec docker compose exec -T control-panel python -m testing.simulation.visual_navigation_acceptance --case "$case_name" --output "/workspace/outputs/$case_name-$stamp.json"

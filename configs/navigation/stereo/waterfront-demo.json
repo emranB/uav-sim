@@ -1,0 +1,9 @@
+{
+  "schema_version": 1,
+  "goal_offset_enu_m": [
+    4,
+    40
+  ],
+  "geographic_buildings": true,
+  "obstacles": []
+}

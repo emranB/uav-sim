@@ -1,0 +1,4 @@
+# Apply only with stereo navigation; include navigation-stereo in the declared roles.
+services:
+  navigation-stereo:
+    command: [python, -m, common.lifecycle.supervisor, --role, navigation-stereo, --, python, -m, integrations.vision.navigation_stereo]

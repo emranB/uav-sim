@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "coordinate_frame": "ENU metres; Z up",
+  "blender_version": "4.5.16 LTS",
+  "source_recipe": "src/integrations/blender/author_landmarks.py",
+  "license": "CC0-1.0",
+  "collision_geometry": false,
+  "assets": [
+    {
+      "file": "pad_trim.obj",
+      "sha256": "fdc99dd0efd99f0fdd23bd96bc18730d29d4b6ed215f8cfa3287d7e57a55dcf9",
+      "vertices": 192,
+      "triangles": 192,
+      "bytes": 9274,
+      "colour_rgba": [
+        0.65,
+        0.88,
+        0.82,
+        1
+      ]
+    },
+    {
+      "file": "pad_labels.obj",
+      "sha256": "d5a551da1cef624b9376293a3ba1bb845c68788ff4e7ed1ad170b2eaa847e561",
+      "vertices": 28,
+      "triangles": 14,
+      "bytes": 1136,
+      "colour_rgba": [
+        0.88,
+        0.96,
+        1,
+        1
+      ]
+    }
+  ]
+}

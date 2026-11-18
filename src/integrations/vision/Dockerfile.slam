@@ -1,0 +1,62 @@
+ARG UAV_VISION_BASE=uav-sim-vision-base:development
+FROM ${UAV_VISION_BASE} AS mapping_build
+USER root
+ARG ORB_SLAM_REVISION=0df83dde1c85c7ab91a0d47de7a29685d046f637
+ARG PANGOLIN_REVISION=aff6883c83f3fd7e8268a9715e84266c42e2efe3
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libopencv-dev libeigen3-dev libboost-serialization-dev libglew-dev \
+    libgl1-mesa-dev libegl1-mesa-dev nlohmann-json3-dev && \
+    rm -rf /var/lib/apt/lists/*
+RUN git init /opt/pangolin && cd /opt/pangolin && \
+    git remote add origin https://github.com/stevenlovegrove/Pangolin.git && \
+    git fetch --depth 1 origin ${PANGOLIN_REVISION} && git checkout FETCH_HEAD && \
+    cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DBUILD_EXAMPLES=OFF \
+      -DBUILD_TOOLS=OFF -DBUILD_PANGOLIN_PYTHON=OFF -DBUILD_PANGOLIN_FFMPEG=OFF \
+      -DBUILD_PANGOLIN_V4L=OFF -DBUILD_PANGOLIN_LIBDC1394=OFF \
+      -DCMAKE_CXX_FLAGS="-include cstdint" && \
+    cmake --build build -j2 && cmake --install build && ldconfig
+RUN git init /opt/orb-slam3 && cd /opt/orb-slam3 && \
+    git remote add origin https://github.com/UZ-SLAMLab/ORB_SLAM3.git && \
+    git fetch --depth 1 origin ${ORB_SLAM_REVISION} && git checkout FETCH_HEAD && \
+    git rev-parse HEAD > /opt/orb-slam3/revision.txt && \
+    sed -i 's/-std=c++11/-std=c++17/g; s/-march=native//g' CMakeLists.txt && \
+    sed -i 's/-march=native//g' Thirdparty/DBoW2/CMakeLists.txt Thirdparty/g2o/CMakeLists.txt && \
+    sed -i 's/bool mnFullBAIdx;/int mnFullBAIdx;/' include/LoopClosing.h && \
+    cmake -S Thirdparty/DBoW2 -B Thirdparty/DBoW2/build -DCMAKE_BUILD_TYPE=Release && \
+    cmake --build Thirdparty/DBoW2/build -j2 && \
+    cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+COPY src/integrations/vision/reference_pose* src/integrations/vision/stereo_initialization.h /opt/vision-extension/
+COPY src/integrations/vision/patch_tracking.py /opt/vision-extension/
+COPY src/testing/vision/reference_pose_test.cpp src/testing/vision/stereo_initialization_test.cpp /opt/vision-extension/
+RUN python /opt/vision-extension/patch_tracking.py && \
+    g++ -std=c++17 /opt/vision-extension/reference_pose_test.cpp \
+      -I/opt/vision-extension $(pkg-config --cflags --libs opencv4) \
+      -o /opt/vision-extension/reference-pose-test && \
+    /opt/vision-extension/reference-pose-test && \
+    g++ -std=c++17 /opt/vision-extension/stereo_initialization_test.cpp \
+      -I/opt/vision-extension -o /opt/vision-extension/stereo-initialization-test && \
+    /opt/vision-extension/stereo-initialization-test
+RUN --mount=type=cache,target=/opt/orb-slam3/build \
+    cmake -S /opt/orb-slam3 -B /opt/orb-slam3/build -DCMAKE_BUILD_TYPE=Release && \
+    cmake --build /opt/orb-slam3/build --target g2o -j2 && \
+    cmake --build /opt/orb-slam3/build --target ORB_SLAM3 -j2 && \
+    tar -xf /opt/orb-slam3/Vocabulary/ORBvoc.txt.tar.gz -C /opt/orb-slam3/Vocabulary
+COPY src/integrations/vision/orb_bridge.cpp /opt/orb-bridge/orb_bridge.cpp
+COPY src/integrations/vision/CMakeLists.txt /opt/orb-bridge/CMakeLists.txt
+RUN cmake -S /opt/orb-bridge -B /opt/orb-bridge/build && \
+    cmake --build /opt/orb-bridge/build -j2 && \
+    install /opt/orb-bridge/build/orb-recording /usr/local/bin/orb-recording
+ENV LD_LIBRARY_PATH=/opt/orb-slam3/lib:/opt/orb-slam3/Thirdparty/DBoW2/lib:/opt/orb-slam3/Thirdparty/g2o/lib:/usr/local/lib
+COPY src/integrations/vision/package_runtime.py /opt/orb-bridge/package_runtime.py
+RUN python /opt/orb-bridge/package_runtime.py /usr/local/bin/orb-recording /opt/mapping-runtime
+
+FROM ${UAV_VISION_BASE}
+COPY --from=mapping_build /opt/mapping-runtime/ /
+COPY --from=mapping_build /opt/orb-slam3/Vocabulary/ORBvoc.txt /opt/orb-slam3/Vocabulary/ORBvoc.txt
+COPY --from=mapping_build /opt/orb-slam3/revision.txt /opt/orb-slam3/revision.txt
+COPY --from=mapping_build /opt/orb-slam3/LICENSE /opt/orb-slam3/LICENSE
+ENV LD_LIBRARY_PATH=/opt/orb-slam3/lib:/opt/orb-slam3/Thirdparty/DBoW2/lib:/opt/orb-slam3/Thirdparty/g2o/lib:/usr/local/lib
+COPY src/common /workspace/src/common
+COPY src/integrations/vision /workspace/src/integrations/vision
+USER app
+CMD ["python", "-m", "integrations.vision.mapping", "--help"]

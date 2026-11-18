@@ -1,0 +1,22 @@
+#!/bin/sh
+set -eu
+run=$(dirname "$0")
+case_name="$1"
+case "$case_name" in
+  gps-loss) satellites=10; gps_aid=1 ;;
+  short|gps-off|vision-loss) satellites=0; gps_aid=0 ;;
+  *) exit 2 ;;
+esac
+"$run/visual-px4" listener vehicle_status -n 1 | grep -q 'arming_state: 1'
+"$run/visual-px4" param set SIM_GPS_USED "$satellites"
+"$run/visual-px4" param set EKF2_GPS_CTRL "$gps_aid"
+"$run/visual-px4" param set EKF2_EV_CTRL 3
+"$run/visual-px4" param set EKF2_HGT_REF 3
+"$run/visual-px4" param set EKF2_EV_DELAY 0
+"$run/visual-px4" param set EKF2_EV_NOISE_MD 1
+"$run/visual-px4" param set COM_OBL_RC_ACT 4
+"$run/visual-px4" mavlink start -u 14610 -o 14611 -m extvision -r 100000
+"$run/visual-px4" mavlink stream -u 14610 -s ATTITUDE_QUATERNION -r 40
+"$run/visual-px4" mavlink stream -u 14610 -s TIMESYNC -r 80
+stamp=$(date +%s%N)
+exec docker compose exec -T px4 python -m testing.simulation.visual_aiding_status --output "/workspace/outputs/aiding-$case_name-$stamp.jsonl"

@@ -1,0 +1,16 @@
+# Opt-in bounded diagnostic entry point; restore the normal command after the paired test.
+services:
+  navigation-stereo:
+    command:
+      - python
+      - -m
+      - testing.simulation.stereo_timing_worker
+      - --directory
+      - ${UAV_STEREO_TIMING_DIRECTORY:?Set a unique output directory for this experiment}
+  control-panel:
+    command:
+      - python
+      - -m
+      - testing.simulation.navigation_timing_backend
+      - --directory
+      - ${UAV_STEREO_CONSUMER_TIMING_DIRECTORY:?Set a unique consumer output directory}

@@ -1,0 +1,39 @@
+# Optional ceilings for a workstation shared with other applications.
+# These are limits, not reservations; measure both workloads before increasing them.
+services:
+  gazebo:
+    cpus: 4
+    mem_limit: 3g
+  live-mapping:
+    cpus: 4
+    mem_limit: 4g
+  control-panel:
+    cpus: 1
+    mem_limit: 1g
+  px4:
+    cpus: 1
+    mem_limit: 768m
+  px4-second:
+    cpus: 1
+    mem_limit: 768m
+  gazebo-viewer:
+    cpus: 2
+    mem_limit: 1536m
+  qgroundcontrol:
+    cpus: 2
+    mem_limit: 1536m
+  desktop:
+    cpus: 1
+    mem_limit: 1g
+  camera-streams:
+    cpus: 1
+    mem_limit: 512m
+  dds-agent:
+    cpus: 1
+    mem_limit: 512m
+  ros2-monitor:
+    cpus: 1
+    mem_limit: 512m
+  ros2-clock:
+    cpus: 1
+    mem_limit: 512m

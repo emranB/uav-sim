@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+set -euo pipefail
+run=$(dirname "$0")
+docker compose exec -T gazebo python -m testing.simulation.visual_return_workload --return-only     --timeline /workspace/outputs/return-clip-timeline.json > "$OUTPUTS_PATH/return-clip-workload.log" 2>&1 &
+fixture=$!
+for attempt in $(seq 1 80); do
+    if [[ -s "$OUTPUTS_PATH/return-clip-timeline.json" ]]; then break; fi
+    kill -0 "$fixture"
+    sleep 0.1
+done
+docker compose exec -T gazebo python -m testing.simulation.visual_return_capture     --timeline /workspace/outputs/return-clip-timeline.json --output /workspace/outputs/return-clip
+wait "$fixture"
+docker compose exec -T navigation-stereo python -m testing.simulation.visual_transport_benchmark     /workspace/outputs/return-clip/report.json /workspace/outputs/transport-benchmark
+docker compose exec -T navigation-stereo python - < "$run/visual-native-recording-faults.py"

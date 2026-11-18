@@ -1,0 +1,105 @@
+{
+  "schema_version": 1,
+  "nominal_completion_target": 0.9,
+  "trials_per_mode": 10,
+  "modes": [
+    "camera",
+    "fused"
+  ],
+  "nominal_cases": [
+    {
+      "name": "single-01",
+      "scene": "configs/navigation/stereo/single-01.json",
+      "input_quality": {},
+      "held_out": false,
+      "batch": "early"
+    },
+    {
+      "name": "multiple-02",
+      "scene": "configs/navigation/stereo/multiple-02.json",
+      "input_quality": {},
+      "held_out": false,
+      "batch": "early"
+    },
+    {
+      "name": "offset-03",
+      "scene": "configs/navigation/stereo/offset-03.json",
+      "input_quality": {},
+      "held_out": false,
+      "batch": "broader"
+    },
+    {
+      "name": "pillar-04",
+      "scene": "configs/navigation/stereo/pillar-04.json",
+      "input_quality": {},
+      "held_out": false,
+      "batch": "broader"
+    },
+    {
+      "name": "passage-05",
+      "scene": "configs/navigation/stereo/passage-05.json",
+      "input_quality": {},
+      "held_out": false,
+      "batch": "broader"
+    },
+    {
+      "name": "quality-06",
+      "scene": "configs/navigation/stereo/quality-06.json",
+      "input_quality": {
+        "blur_sigma": 0.4,
+        "noise_sigma": 1.5,
+        "seed": 106
+      },
+      "held_out": false,
+      "batch": "broader"
+    },
+    {
+      "name": "heldout-07",
+      "scene": "configs/navigation/stereo/heldout-07.json",
+      "input_quality": {},
+      "held_out": true,
+      "batch": "broader"
+    },
+    {
+      "name": "heldout-08",
+      "scene": "configs/navigation/stereo/heldout-08.json",
+      "input_quality": {},
+      "held_out": true,
+      "batch": "broader"
+    },
+    {
+      "name": "heldout-09",
+      "scene": "configs/navigation/stereo/heldout-09.json",
+      "input_quality": {
+        "noise_sigma": 1,
+        "seed": 809
+      },
+      "held_out": true,
+      "batch": "broader"
+    },
+    {
+      "name": "heldout-10",
+      "scene": "configs/navigation/stereo/heldout-10.json",
+      "input_quality": {
+        "blur_sigma": 0.6,
+        "noise_sigma": 1,
+        "seed": 810
+      },
+      "held_out": true,
+      "batch": "broader"
+    }
+  ],
+  "degraded_cases": [
+    "missing_left",
+    "invalid_depth",
+    "dark_images",
+    "stale",
+    "calibration",
+    "fused_inconsistency",
+    "fused_range_loss",
+    "camera_range_independence",
+    "worker_restart",
+    "reset_restart",
+    "reciprocal_target"
+  ]
+}

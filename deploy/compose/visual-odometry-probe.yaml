@@ -1,0 +1,58 @@
+# Apply only to a separate visual-navigation SITL qualification project.
+name: uav-visual-odometry
+
+x-visual-camera: &visual-camera
+  UAV_CAMERA_WIDTH: '640'
+  UAV_CAMERA_HEIGHT: '480'
+  UAV_CAMERA_RATE_HZ: '40'
+  UAV_CAMERA_FOV_RAD: '1.4'
+  UAV_CAMERA_BASELINE_M: '0.4'
+  UAV_CAMERA_HEIGHT_M: '0.5'
+  UAV_CAMERA_PITCH_RAD: '1.1'
+
+services:
+  gazebo:
+    environment:
+      <<: *visual-camera
+      UAV_AVOIDANCE_SCENARIO: /workspace/configs/navigation/stereo/visual-odometry-probe.json
+      GZ_PARTITION: uav-visual-odometry
+      UAV_HEADLESS: 'true'
+      UAV_VISUAL_ODOMETRY_PROBE: 'true'
+  px4:
+    environment:
+      GZ_PARTITION: uav-visual-odometry
+  px4-second:
+    environment:
+      GZ_PARTITION: uav-visual-odometry
+  control-panel:
+    environment:
+      UAV_VISUAL_MISSION_NAME: ${UAV_VISUAL_MISSION_NAME:-}
+      GZ_PARTITION: uav-visual-odometry
+      UAV_HEADLESS: 'true'
+      UAV_VISUAL_ODOMETRY_PROBE: 'true'
+      UAV_AVOIDANCE_SCENARIO: /workspace/configs/navigation/stereo/visual-odometry-probe.json
+  navigation-stereo:
+    environment:
+      GZ_PARTITION: uav-visual-odometry
+  desktop:
+    environment:
+      UAV_VISUAL_ODOMETRY_PROBE: 'true'
+      GZ_PARTITION: uav-visual-odometry
+  visual-odometry-worker:
+    profiles: [visual-odometry]
+    image: ${UAV_VISUAL_ODOMETRY_IMAGE:-uav-sim-mapping:development}
+    init: true
+    entrypoint: [python, -m, testing.simulation.visual_odometry_live]
+    environment:
+      <<: *visual-camera
+      GZ_PARTITION: uav-visual-odometry
+      GZ_IP: 127.0.0.1
+      PYTHONPATH: /workspace/src
+      OPENBLAS_NUM_THREADS: '1'
+      OMP_NUM_THREADS: '1'
+    network_mode: service:simulation-network
+    volumes:
+      - ./src:/workspace/src:ro
+      - ./configs:/workspace/configs:ro
+      - ${OUTPUTS_PATH:?Set a dedicated isolated SITL output directory}:/workspace/outputs
+      - runtime:/runtime

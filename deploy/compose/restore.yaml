@@ -1,0 +1,18 @@
+# Apply after the normal deployment overlays. Only UAV-owned process children restart.
+services:
+  control-panel:
+    stop_grace_period: 320s
+    environment:
+      UAV_RESTORE_SERVICES: ${UAV_RESTORE_SERVICES:-gazebo,gazebo-viewer,qgroundcontrol,dds-agent,ros2-monitor,ros2-clock}
+  gazebo:
+    command: [python, -m, common.lifecycle.supervisor, --role, gazebo, --, python, -m, gazebo.launcher, server]
+  gazebo-viewer:
+    command: [python, -m, common.lifecycle.supervisor, --role, gazebo-viewer, --, python, -m, gazebo.launcher, viewer]
+  qgroundcontrol:
+    command: [python, -m, common.lifecycle.supervisor, --role, qgroundcontrol, --, python, -m, qgroundcontrol.launcher]
+  dds-agent:
+    command: [python, -m, common.lifecycle.supervisor, --role, dds-agent, --, bash, -lc, 'source /opt/ros/jazzy/setup.bash && MicroXRCEAgent udp4 -p 8888']
+  ros2-monitor:
+    command: [python, -m, common.lifecycle.supervisor, --role, ros2-monitor, --, bash, -lc, 'source /opt/ros/jazzy/setup.bash && source /opt/ros-workspace/install/setup.bash && python -m integrations.ros2.monitor']
+  ros2-clock:
+    command: [python, -m, common.lifecycle.supervisor, --role, ros2-clock, --, bash, -lc, 'source /opt/ros/jazzy/setup.bash && ros2 run ros_gz_bridge parameter_bridge /clock@rosgraph_msgs/msg/Clock[gz.msgs.Clock']

@@ -1,0 +1,33 @@
+# Use after deploy/compose/inspection.yaml; estimator can restart independently of flight.
+services:
+  control-panel:
+    environment:
+      UAV_LIVE_MAPPING: 'true'
+  live-mapping:
+    image: uav-sim-mapping:development
+    build:
+      context: .
+      dockerfile: src/integrations/vision/Dockerfile.slam
+    init: true
+    stop_grace_period: 45s
+    command: python -m integrations.vision.live
+    environment:
+      PYTHONPATH: /workspace/src
+      OUTPUT_DIR: /workspace/outputs
+      UAV_STORAGE_RESERVE_BYTES: ${UAV_STORAGE_RESERVE_BYTES:-2147483648}
+      OPENBLAS_NUM_THREADS: '1'
+      OMP_NUM_THREADS: '1'
+      UAV_SLAM_FEATURES: ${UAV_SLAM_FEATURES:-4000}
+      UAV_SLAM_LEVELS: ${UAV_SLAM_LEVELS:-8}
+      UAV_SLAM_RATE_HZ: ${UAV_SLAM_RATE_HZ:-5}
+      UAV_MAPPING_INPUT_ARCHIVE_PAIRS: ${UAV_MAPPING_INPUT_ARCHIVE_PAIRS:-0}
+      UAV_MAPPING_DIAGNOSTICS: ${UAV_MAPPING_DIAGNOSTICS:-false}
+    network_mode: none
+    volumes:
+      - ./src:/workspace/src:ro
+      - ./configs:/workspace/configs:ro
+      - ${OUTPUTS_PATH:-./outputs}:/workspace/outputs
+      - runtime:/runtime
+    depends_on:
+      camera-streams:
+        condition: service_started

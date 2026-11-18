@@ -1,0 +1,44 @@
+#!/usr/bin/env bash
+set -euo pipefail
+run=$(dirname "$0")
+before=$(docker compose exec -T px4 cat /runtime/px4.run)
+"$run/visual-reset"
+after=$(docker compose exec -T px4 cat /runtime/px4.run)
+python3 - "$before" "$after" <<'PY'
+import json
+import os
+import sys
+import time
+import urllib.request
+from pathlib import Path
+
+from common.logging.storage import write_json_atomic
+
+before, after = sys.argv[1:]
+port = os.environ["BACKEND_PORT"]
+destination = Path(os.environ["OUTPUTS_PATH"], "reset-gps.json")
+deadline = time.monotonic() + 35
+state = {}
+while time.monotonic() < deadline:
+    try:
+        with urllib.request.urlopen(
+            f"http://127.0.0.1:{port}/telemetry?vehicle_id=vehicle_1", timeout=3
+        ) as response:
+            state = json.load(response)
+    except OSError:
+        time.sleep(0.3)
+        continue
+    gps = state.get("messages", {}).get("GPS_RAW_INT", {})
+    if state["run_id"] == after and state["ready"] and not state["armed"] and gps.get("fix_type", 0) >= 3:
+        break
+    time.sleep(0.3)
+passed = (before != after and state.get("run_id") == after and state.get("ready")
+          and state.get("armed") is False and
+          state.get("messages", {}).get("GPS_RAW_INT", {}).get("fix_type", 0) >= 3)
+write_json_atomic(destination, {"passed": passed, "previous_controller": before,
+                               "new_controller": after, "ready": state.get("ready"),
+                               "armed": state.get("armed"), "connected": state.get("connected"),
+                               "gps_fix_type": state.get("messages", {}).get("GPS_RAW_INT", {}).get("fix_type") })
+raise SystemExit(0 if passed else 1)
+PY
+python3 scripts/validation/end_to_end.py --port "$BACKEND_PORT" --vehicle-id vehicle_1     --east-offset-m 2.5 --north-offset-m -8.5 --timeout 180

@@ -1,0 +1,34 @@
+# Apply after avoidance; rendered optical measurements are separate from localization.
+services:
+  gazebo:
+    environment:
+      UAV_NAVIGATION_STEREO: 'true'
+      UAV_AVOIDANCE_SCENARIO: /workspace/configs/navigation/${UAV_AVOIDANCE_SCENARIO:-stereo/single-01}.json
+  control-panel:
+    cpus: 2.0
+    environment:
+      UAV_NAVIGATION_STEREO: 'true'
+  navigation-stereo:
+    image: ${UAV_NAV_STEREO_IMAGE:-uav-sim-mapping:development}
+    init: true
+    command: python -m integrations.vision.navigation_stereo
+    environment:
+      PYTHONPATH: /workspace/src
+      OUTPUT_DIR: /workspace/outputs
+      UAV_STORAGE_RESERVE_BYTES: ${UAV_STORAGE_RESERVE_BYTES:-2147483648}
+      GZ_PARTITION: uav-sim
+      GZ_IP: 127.0.0.1
+      UAV_NAV_STEREO_BACKEND: ${UAV_NAV_STEREO_BACKEND:-cpu}
+      OPENBLAS_NUM_THREADS: '1'
+      OMP_NUM_THREADS: '1'
+    network_mode: service:simulation-network
+    cpus: ${UAV_NAV_STEREO_CPUS:-4.0}
+    mem_limit: 2g
+    volumes:
+      - ./src:/workspace/src:ro
+      - ./configs:/workspace/configs:ro
+      - ${OUTPUTS_PATH:-./outputs}:/workspace/outputs
+      - runtime:/runtime
+    depends_on:
+      gazebo:
+        condition: service_healthy

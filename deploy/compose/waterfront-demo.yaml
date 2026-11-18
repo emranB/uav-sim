@@ -1,0 +1,62 @@
+# Apply after the visual navigation, waterfront, native capture and replay overlays.
+x-geography: &geography
+  UAV_WORLD_LOCATION: /workspace/outputs/geography/terrain/location.json
+  UAV_SCENE: waterfront
+  UAV_TERRAIN_DIR: /workspace/outputs/geography/terrain
+  UAV_WATERFRONT_BUILDINGS_DIR: /workspace/outputs/geography/buildings
+  UAV_AVOIDANCE_SCENARIO: /workspace/configs/navigation/stereo/waterfront-demo.json
+services:
+  gazebo:
+    environment:
+      <<: *geography
+      UAV_HEADLESS: 'true'
+      UAV_VISUAL_POLISH: 'true'
+      UAV_LAUNCH_PLATFORMS: 'true'
+  control-panel:
+    environment:
+      <<: *geography
+      UAV_HEADLESS: 'false'
+      UAV_VISUAL_MISSION_NAME: waterfront-return-comparison
+      UAV_VISUAL_MISSION_OBSTACLE_MODE: range
+      UAV_VISUAL_MISSION_MAX_RADIUS_M: '50'
+      UAV_VISUAL_MISSION_MAX_DISTANCE_M: '150'
+      UAV_VISUAL_MISSION_TIMEOUT_SECONDS: '1000'
+      UAV_REPLAY_CAPTURE_SECONDS: '1200'
+      UAV_REPLAY_CAPTURE_BYTES: '134217728'
+      UAV_REPLAY_MAX_WALL_SECONDS: '3600'
+      UAV_REPLAY_OUTPUT_MAX_BYTES: '536870912'
+      UAV_REPLAY_JOB_STORE_MAX_BYTES: '2147483648'
+      UAV_REPLAY_RENDER_TRIGGER: keep
+  px4:
+    environment:
+      UAV_WORLD_LOCATION: /workspace/outputs/geography/terrain/location.json
+  px4-second:
+    environment:
+      UAV_WORLD_LOCATION: /workspace/outputs/geography/terrain/location.json
+  qgroundcontrol:
+    environment:
+      UAV_WORLD_LOCATION: /workspace/outputs/geography/terrain/location.json
+  live-mapping:
+    environment:
+      UAV_SLAM_LEVELS: '12'
+  desktop:
+    image: ${UAV_WATERFRONT_DESKTOP_IMAGE:-uav-sim-native-desktop:waterfront-demo}
+    environment:
+      UAV_HEADLESS: 'false'
+      UAV_WATERFRONT_DEMO: 'true'
+      UAV_NATIVE_CONTROL_STATE: 'true'
+      UAV_OVERVIEW_FOCUS_ENU_M: '[7,20,3]'
+      QT_FFMPEG_DECODING_HW_DEVICE_TYPES: ','
+      QT_DISABLE_HW_TEXTURES_CONVERSION: '1'
+      QT_XCB_GL_INTEGRATION: none
+  replay-renderer:
+    cpus: 6
+    mem_limit: 6g
+    environment:
+      UAV_REPLAY_LAYOUT: dual-drone
+      UAV_REPLAY_PARALLEL_CAMERAS: 'true'
+      UAV_REPLAY_NATIVE_COMPOSITE: 'false'
+      UAV_REPLAY_RENDER_SAMPLES: '8'
+      UAV_REPLAY_MAX_WALL_SECONDS: '3600'
+      UAV_REPLAY_OUTPUT_MAX_BYTES: '536870912'
+      UAV_REPLAY_JOB_STORE_MAX_BYTES: '2147483648'

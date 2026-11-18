@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+set -euo pipefail
+run=$(dirname "$0")
+case_name=$1
+"$run/visual-reset"
+stamp=$(date +%s%N)
+"$run/visual-start-case" "$case_name" > "$OUTPUTS_PATH/setup-$case_name-$stamp.log" 2>&1 &
+monitor=$!
+publisher="uav-primary-visual-publisher-$case_name"
+sleep 1
+docker compose --profile visual-odometry run --rm --no-deps --name "$publisher"   visual-odometry-worker --vehicle vehicle_1 --features 1200 --flight-publisher --record-poses   --output "/workspace/outputs/live-pipe-$case_name-$stamp" > "$OUTPUTS_PATH/publisher-$case_name-$stamp.log" 2>&1 &
+worker=$!
+status=0
+"$run/visual-qualify-case" "$case_name" || status=$?
+disarm_report="$OUTPUTS_PATH/disarm-$case_name-$stamp.txt"
+confirm_disarm() {
+    "$run/visual-px4" listener vehicle_status -n 1 > "$disarm_report" &&
+        grep -q 'arming_state: 1' "$disarm_report"
+}
+if ! confirm_disarm; then
+    curl -fsS --max-time 15 -H 'Content-Type: application/json' -d '{"vehicle_id":"vehicle_1"}' "http://127.0.0.1:$BACKEND_PORT/stop" || true
+    for attempt in $(seq 1 50); do
+        if confirm_disarm; then break; fi
+        sleep 1
+    done
+    grep -q 'arming_state: 1' "$disarm_report" || exit 3
+fi
+if docker inspect "$publisher" >/dev/null 2>&1; then docker stop --timeout 8 "$publisher"; fi
+wait "$worker" || true
+kill "$monitor" 2>/dev/null || true
+wait "$monitor" || true
+exit "$status"

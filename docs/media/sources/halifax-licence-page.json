@@ -1,0 +1,97 @@
+{
+  "source": "PAGEEDITOR",
+  "folderId": null,
+  "values": {
+    "sites": [
+      {
+        "id": "18260e839de742c3a0d991bf59b29597",
+        "title": "Halifax Data Mapping and Analytics Hub "
+      }
+    ],
+    "layout": {
+      "sections": [
+        {
+          "containment": "fixed",
+          "isFooter": false,
+          "style": {
+            "background": {
+              "isFile": true,
+              "isUrl": false,
+              "state": "valid",
+              "display": {},
+              "transparency": 0,
+              "position": {
+                "x": "center",
+                "y": "center"
+              },
+              "color": "transparent",
+              "fileSrc": "OpenData.png",
+              "cropSrc": "OpenData.png"
+            },
+            "color": "#4c4c4c",
+            "rowLayout": "box"
+          },
+          "rows": [
+            {
+              "cards": [
+                {
+                  "component": {
+                    "name": "markdown-card",
+                    "settings": {
+                      "cardId": "cjfbnw1kf",
+                      "schemaVersion": 2.1,
+                      "markdown": "<h1 id=\"our-community\" style=\"font-family: &quot;Open Sans&quot;, &quot;Avenir Next&quot;; color: rgb(255, 255, 255); font-size: var(--font-size-h1);\">Open Data Licence</h1>"
+                    }
+                  },
+                  "width": 12
+                }
+              ]
+            }
+          ],
+          "visibility": {
+            "access": "default",
+            "groups": []
+          }
+        },
+        {
+          "containment": "fixed",
+          "isFooter": false,
+          "style": {
+            "background": {
+              "isFile": false,
+              "isUrl": true,
+              "state": "",
+              "display": {},
+              "transparency": 0,
+              "position": {
+                "x": "center",
+                "y": "center"
+              },
+              "color": "transparent"
+            },
+            "color": "#4C4C4C"
+          },
+          "rows": [
+            {
+              "cards": [
+                {
+                  "component": {
+                    "name": "markdown-card",
+                    "settings": {
+                      "markdown": "<h2><b>Disclaimer</b></h2>\n  <p>Halifax Regional Municipality may add, delete, or modify datasets without notice, and may cancel or restrict access to datasets for any reason.</p>\n  <p>Halifax Regional Municipality is not liable for any direct, indirect, incidental, consequential, special, or other damages, including but not limited to damages for loss of revenue or anticipated profits resulting from your access (or lack of access) to datasets or your use of (or inability to use) datasets.</p>\n<h2><b>Licence</b></h2>\n  <p>Halifax Regional Municipality open data is released in accordance with the Freedom of Information and Protection of Privacy provisions under Part XX of the Municipal Government Act (Nova Scotia), and may be used in accordance with this Open Government Licence\u2014Halifax.</p>\n  <p>This licence is based on Version 2.0 of the Open Government Licence\u2014Canada, which was developed through public consultation and a collaborative effort by the federal government and some of the provincial governments. The only substantive changes in this licence are to replace direct references to the Government of Canada with Halifax Regional Municipality, and to reference the laws applicable in Nova Scotia.</p>\n<h2><b>Open Government Licence - Halifax</b></h2>\n  <p>You are encouraged to use the Information that is available under this licence with only a few conditions.</p>\n  <p><b>Using information under this licence</b></p>\n  <p>1. Use of any information indicates your acceptance of the terms below.</p>\n  <p>2. The information provider grants you a worldwide, royalty-free, perpetual, non-exclusive licence to use the Information, including for commercial purposes, subject to the terms below.</p>\n  <p><b>You are free to:</b></p>\n  <p>3. Copy, modify, publish, translate, adapt, distribute or otherwise use the Information in any medium, mode or format for any lawful purpose.</p>\n  <p><b>You must, where you do any of the above:</b></p>\n  <p>4. Acknowledge the source of the Information by including any attribution statement specified by the i provider and, where possible, provide a link to this licence.</p>\n  <p>If the information provider does not provide a specific attribution statement, or if you are using Information from several information providers and multiple attributions are not practical for your product or application, you must use the following attribution statement:</p>\n  <p><b>Contains information licenced under the Open Government Licence\u2014Halifax.</b></p>\n  <p>5. The terms of this licence are important, and if you fail to comply with any of them, the rights granted to you under this licence, or any similar licence granted by the Information Provider, will end automatically.</p>\n  <p><b>Exemptions</b></p>\n  <p>6. This licence does not grant you any right to use:<br style=\"font-size: 1.125rem; line-height: 1.77778;\">a) personal information;<br style=\"font-size: 1.125rem; line-height: 1.77778;\">b) information or records not accessible under the Freedom of Information and Protection of Privacy provisions of Part XX of the Municipal Government Act (NS);<br style=\"font-size: 1.125rem; line-height: 1.77778;\">c) third-party rights the information provider is not authorized to licence;<br style=\"font-size: 1.125rem; line-height: 1.77778;\">d) the names, crests, logos, or other official marks of the information provider;<br style=\"font-size: 1.125rem; line-height: 1.77778;\">e) information subject to other intellectual property rights, including patents, trademarks, and official marks.</p>\n  <p><b>Non-endorsement</b></p>\n  <p>7. This licence does not grant you any right to use the information in a way that suggests any official status or that the Information Provider endorses you or your use of the Information.<br style=\"font-size: 1.125rem; line-height: 1.77778;\">No warranty</p><p style=\"margin-bottom: 16px; font-size: 1.125rem; line-height: 1.77778; color: rgb(119, 119, 119); font-family: &quot;Alright Sans&quot;, Arial, sans-serif;\">8. The information is licenced \"as is\", and the information provider excludes all representations, warranties, obligations, and liabilities, whether express or implied, to the maximum extent permitted by law.</p>\n  <p>9. The information provider is not liable for any errors or omissions in the Information, and will not under any circumstances be liable for any direct, indirect, special, incidental, consequential, or other loss, injury or damage caused by its use or otherwise arising in connection with this licence or the Information, even if specifically advised of the possibility of such loss, injury or damage.</p>\n  <p><b>Governing law</b></p>\n  <p>10. This licence is governed by the laws of the province of Nova Scotia and the applicable laws of Canada.</p>\n  <p>11. Legal proceedings related to this licence may only be brought in the courts of Nova Scotia.</p>\n  <p><b>Definitions</b></p>\n  <p>12. In this licence, the terms below have the following meanings:<br style=\"font-size: 1.125rem; line-height: 1.77778;\">\"Information\" means information resources or records protected by copyright or other information or records that are offered for use under the terms of this licence.<br style=\"font-size: 1.125rem; line-height: 1.77778;\">\"Information provider\" means Halifax Regional Municipality.<br style=\"font-size: 1.125rem; line-height: 1.77778;\">\"Personal information\" has the meaning set out in section 461(f) of the Municipal Government Act (NS).<br style=\"font-size: 1.125rem; line-height: 1.77778;\">\"Record\" has the meaning set out in section 461(h) of the Municipal Government Act (NS).<br style=\"font-size: 1.125rem; line-height: 1.77778;\">\"You\" means the natural or legal person, or body of persons corporate or incorporate, acquiring rights under this licence.</p>\n  <p><b>Versioning</b></p>\n  <p>13. This is version 1.0 of the Open Government Licence\u2014Halifax. The information provider may make changes to the terms of this licence from time to time and issue a new version of the licence. Your use of the information will be governed by the terms of the licence in force as of the date you accessed the information.</p>",
+                      "schemaVersion": 2.1
+                    }
+                  },
+                  "width": 12,
+                  "showEditor": false
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "updatedAt": "2023-03-13T13:20:12.020Z",
+    "updatedBy": "opendata_HRM"
+  }
+}

@@ -1,0 +1,42 @@
+# Explicit opt-in physical scene. Restart physics and its controllers to apply.
+services:
+  gazebo:
+    environment:
+      UAV_SCENE: inspection
+      UAV_STEREO: 'true'
+  control-panel:
+    environment:
+      UAV_SCENE: inspection
+      UAV_STEREO: 'true'
+  px4:
+    environment:
+      UAV_STEREO: 'true'
+  px4-second:
+    environment:
+      UAV_STEREO: 'true'
+  camera-streams:
+    image: uav-sim-stack:development
+    init: true
+    command: python -m gazebo.camera_streams
+    environment:
+      PYTHONPATH: /workspace/src
+      OUTPUT_DIR: /workspace/outputs
+      UAV_STORAGE_RESERVE_BYTES: ${UAV_STORAGE_RESERVE_BYTES:-2147483648}
+      UAV_RECORD_LIMIT_PAIRS: ${UAV_RECORD_LIMIT_PAIRS:-1}
+      GZ_PARTITION: uav-sim
+      GZ_IP: 127.0.0.1
+    network_mode: service:simulation-network
+    volumes:
+      - ./src:/workspace/src:ro
+      - ./configs:/workspace/configs:ro
+      - ${OUTPUTS_PATH:-./outputs}:/workspace/outputs
+      - runtime:/runtime
+    depends_on:
+      gazebo:
+        condition: service_healthy
+    healthcheck:
+      test: ['CMD', 'python', '-m', 'gazebo.camera_streams', '--healthcheck']
+      interval: 5s
+      timeout: 3s
+      retries: 10
+      start_period: 20s

@@ -1,0 +1,113 @@
+{
+  "fileType": "Plan",
+  "version": 1,
+  "groundStation": "QGroundControl",
+  "mission": {
+    "version": 2,
+    "firmwareType": 12,
+    "vehicleType": 2,
+    "plannedHomePosition": [
+      44.6488,
+      -63.5752,
+      20.0
+    ],
+    "items": [
+      {
+        "type": "SimpleItem",
+        "command": 22,
+        "frame": 3,
+        "autoContinue": true,
+        "doJumpId": 1,
+        "params": [
+          0,
+          0,
+          0,
+          null,
+          44.6488,
+          -63.5752,
+          4
+        ]
+      },
+      {
+        "type": "SimpleItem",
+        "command": 16,
+        "frame": 3,
+        "autoContinue": true,
+        "doJumpId": 2,
+        "params": [
+          1,
+          0,
+          0,
+          null,
+          44.6488,
+          -63.57529470202189,
+          4
+        ]
+      },
+      {
+        "type": "SimpleItem",
+        "command": 16,
+        "frame": 3,
+        "autoContinue": true,
+        "doJumpId": 3,
+        "params": [
+          1,
+          0,
+          0,
+          null,
+          44.64887186522273,
+          -63.57529470202189,
+          4
+        ]
+      },
+      {
+        "type": "SimpleItem",
+        "command": 16,
+        "frame": 3,
+        "autoContinue": true,
+        "doJumpId": 4,
+        "params": [
+          1,
+          0,
+          0,
+          null,
+          44.64887186522273,
+          -63.57524798235776,
+          4
+        ]
+      },
+      {
+        "type": "SimpleItem",
+        "command": 16,
+        "frame": 3,
+        "autoContinue": true,
+        "doJumpId": 5,
+        "params": [
+          1,
+          0,
+          0,
+          null,
+          44.64876406738863,
+          -63.57524798235776,
+          4
+        ]
+      },
+      {
+        "type": "SimpleItem",
+        "command": 20,
+        "frame": 3,
+        "autoContinue": true,
+        "doJumpId": 6,
+        "params": [
+          0,
+          0,
+          0,
+          null,
+          0,
+          0,
+          0
+        ]
+      }
+    ]
+  }
+}

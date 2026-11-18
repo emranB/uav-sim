@@ -1,0 +1,18 @@
+# Use after deploy/compose/linux.yaml with a private host-generated X11 authorization file.
+x-authorization: &authorization
+  environment:
+    XAUTHORITY: /runtime-display/Xauthority
+  volumes:
+    - type: bind
+      source: ${XAUTHORITY_PATH:?Set XAUTHORITY_PATH to the host display authorization file}
+      target: /runtime-display/Xauthority
+      read_only: true
+      bind:
+        create_host_path: false
+services:
+  desktop:
+    <<: *authorization
+  qgroundcontrol:
+    <<: *authorization
+  gazebo-viewer:
+    <<: *authorization

@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "goal_offset_enu_m": [
+    -1,
+    9
+  ],
+  "texture_seed": 103,
+  "lighting_scale": 0.7,
+  "obstacles": [
+    {
+      "center_enu_m": [
+        1,
+        4.5,
+        4
+      ],
+      "size_m": [
+        3,
+        1.2,
+        8
+      ]
+    },
+    {
+      "center_enu_m": [
+        12,
+        1,
+        4
+      ],
+      "size_m": [
+        0.4,
+        22,
+        8
+      ]
+    },
+    {
+      "center_enu_m": [
+        -12,
+        1,
+        4
+      ],
+      "size_m": [
+        0.4,
+        22,
+        8
+      ]
+    },
+    {
+      "center_enu_m": [
+        0,
+        12,
+        4
+      ],
+      "size_m": [
+        24,
+        0.4,
+        8
+      ]
+    },
+    {
+      "center_enu_m": [
+        0,
+        -10,
+        4
+      ],
+      "size_m": [
+        24,
+        0.4,
+        8
+      ]
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+# Explicit optional CUDA depth; CPU worker remains independently usable.
+services:
+  navigation-stereo:
+    image: uav-sim-mapping-vpi:development
+    environment:
+      UAV_NAV_STEREO_BACKEND: ${UAV_NAV_STEREO_BACKEND:-vpi-cuda}
+      NVIDIA_DRIVER_CAPABILITIES: compute,utility
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]

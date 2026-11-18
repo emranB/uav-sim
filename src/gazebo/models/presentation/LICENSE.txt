@@ -1,0 +1,6 @@
+The geometric OBJ assets in this directory are dedicated to the public domain under
+CC0 1.0 Universal: https://creativecommons.org/publicdomain/zero/1.0/
+
+These original launch-pad trim and direction-label meshes contain no external models,
+fonts or textures. The direction labels use original geometric strokes, without external font outlines.
+This dedication applies to the OBJ assets, not to Blender or its bundled components.

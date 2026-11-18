@@ -1,0 +1,15 @@
+#!/bin/sh
+set -eu
+run=$(dirname "$0")
+previous=$(docker compose exec -T px4 cat /runtime/px4.run)
+"$run/visual-px4" listener vehicle_status -n 1 | grep -q 'arming_state: 1'
+curl -fsS --max-time 30 -H 'Content-Type: application/json' -d '{"vehicle_id":"vehicle_1"}' http://127.0.0.1:$BACKEND_PORT/reset
+for attempt in $(seq 1 60); do
+  current=$(docker compose exec -T px4 cat /runtime/px4.run)
+  if [ "$current" != "$previous" ] && "$run/visual-px4" listener vehicle_status -n 1 | grep -q 'arming_state: 1'; then
+    printf '\nController generation: %s\n' "$current"
+    exit 0
+  fi
+  sleep .5
+done
+exit 1

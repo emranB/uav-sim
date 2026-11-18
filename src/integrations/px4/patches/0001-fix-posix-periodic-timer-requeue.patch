@@ -1,0 +1,15 @@
+--- a/platforms/posix/src/px4/common/drv_hrt.cpp
++++ b/platforms/posix/src/px4/common/drv_hrt.cpp
+@@ -451,6 +451,12 @@
+ 
+ 		/* if the callout has a non-zero period, it has to be re-entered */
+ 		if (call->period != 0) {
++			// A worker may have rescheduled this periodic entry during the callback.
++			// Remove that queued occurrence before the dispatcher inserts it again.
++			if (call->deadline != 0) {
++				sq_rem(&call->link, &callout_queue);
++			}
++
+ 			// re-check call->deadline to allow for
+ 			// callouts to re-schedule themselves
+ 			// using hrt_call_delay()

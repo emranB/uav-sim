@@ -1,0 +1,17 @@
+# Optional CUDA surface observation. Apply after mapping and graphics GPU overlays.
+services:
+  live-mapping:
+    image: uav-sim-mapping-vpi:development
+    build:
+      context: .
+      dockerfile: src/integrations/vision/Dockerfile.vpi
+    environment:
+      UAV_SURFACE_BACKEND: ${UAV_SURFACE_BACKEND:-vpi-cuda}
+      NVIDIA_DRIVER_CAPABILITIES: compute,utility
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]

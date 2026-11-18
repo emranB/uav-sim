@@ -1,0 +1,31 @@
+# Optional offline renderer. Its CPU/memory/network budget is independent of control.
+services:
+  replay-renderer:
+    image: ${UAV_REPLAY_RENDER_IMAGE:-uav-sim-replay-renderer:development}
+    build:
+      context: .
+      dockerfile: src/integrations/blender/Dockerfile
+      args:
+        RUNTIME_IMAGE: ${UAV_REPLAY_BASE_IMAGE:-uav-sim-stack:development}
+    init: true
+    command: [python, -m, integrations.blender.worker]
+    network_mode: none
+    cpus: 2
+    mem_limit: 4g
+    stop_grace_period: 10s
+    environment:
+      PYTHONPATH: /workspace/src
+      OUTPUT_DIR: /workspace/outputs
+      UAV_BLENDER_EXECUTABLE: /opt/uav-blender/blender
+      UAV_REPLAY_ENGINE: CYCLES
+      UAV_REPLAY_COMPUTE: CPU
+      UAV_REPLAY_RENDER_WIDTH: 640
+      UAV_REPLAY_RENDER_HEIGHT: 360
+      UAV_REPLAY_RENDER_SAMPLES: 2
+      OMP_NUM_THREADS: '2'
+      OPENBLAS_NUM_THREADS: '2'
+    volumes:
+      - ./src:/workspace/src:ro
+      - ${OUTPUTS_PATH:-./outputs}:/workspace/outputs
+      - runtime:/runtime
+      - ${UAV_BLENDER_DIRECTORY:?Set the extracted official Blender directory}:/opt/uav-blender:ro

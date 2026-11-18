@@ -1,0 +1,36 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "drone-simulation-platform"
+version = "0.1.0"
+description = "Modular simulation workspace for PX4, Gazebo, QGroundControl and ROS 2"
+requires-python = ">=3.11"
+dependencies = ["numpy>=1.26,<2"]
+
+[project.optional-dependencies]
+desktop = ["PySide6-Essentials==6.8.3"]
+dev = ["pytest>=8,<10", "ruff>=0.17,<1"]
+
+[project.scripts]
+uav-desktop = "desktop.main:main"
+uav-backend = "common.simulation_manager.server:main"
+uav-mock-backend = "common.runtime:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+exclude = ["testing*"]
+
+[tool.pytest.ini_options]
+cache_dir = "outputs/cache/pytest"
+testpaths = ["src/testing"]
+pythonpath = ["src"]
+
+[tool.ruff]
+cache-dir = "outputs/cache/ruff"
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E4", "E7", "E9", "F", "I"]

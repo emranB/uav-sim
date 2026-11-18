@@ -1,0 +1,98 @@
+{
+  "schema_version": 1,
+  "name": "Two-vehicle inspection baseline",
+  "scenario": "fault-free-waypoints",
+  "scene": "inspection",
+  "location": "configs/worlds/default.json",
+  "fleet": "configs/vehicles/fleet.json",
+  "vehicles": {
+    "vehicle_1": {
+      "mission": "configs/missions/inspection-vehicle_1.plan",
+      "route_enu_m": [
+        [
+          0,
+          0,
+          8
+        ],
+        [
+          14,
+          18,
+          8
+        ],
+        [
+          14,
+          44,
+          8
+        ],
+        [
+          -14,
+          44,
+          8
+        ],
+        [
+          -14,
+          0,
+          8
+        ],
+        [
+          0,
+          0,
+          8
+        ]
+      ],
+      "home_enu_m": [
+        0,
+        0,
+        0
+      ]
+    },
+    "vehicle_2": {
+      "mission": "configs/missions/inspection-vehicle_2.plan",
+      "route_enu_m": [
+        [
+          6,
+          0,
+          8
+        ],
+        [
+          20,
+          18,
+          8
+        ],
+        [
+          20,
+          44,
+          8
+        ],
+        [
+          -8,
+          44,
+          8
+        ],
+        [
+          -8,
+          0,
+          8
+        ],
+        [
+          6,
+          0,
+          8
+        ]
+      ],
+      "home_enu_m": [
+        6,
+        0,
+        0
+      ]
+    }
+  },
+  "coordinate_note": "Short-range geographic waypoint offsets use a spherical local approximation at the configured Halifax origin; validate actual trajectories against Gazebo.",
+  "faults": [],
+  "provenance": "Manually specified baseline routes; no recovery planning or formation control.",
+  "validation": {
+    "command": "python -m testing.simulation.inspection",
+    "results": "outputs/reports/inspection-flight-*.json",
+    "note": "Validation is host-specific evidence, not a property of the scenario input."
+  }
+}

@@ -1,0 +1,24 @@
+# Isolated native recording qualification; use after visual-navigation and replay overlays.
+services:
+  desktop:
+    command: [python, -m, testing.simulation.combined_presentation, --evidence, /workspace/outputs/reports/presentation]
+  control-panel:
+    environment:
+      UAV_LIVE_MAPPING: 'true'
+  camera-streams:
+    environment:
+      GZ_PARTITION: uav-visual-odometry
+      UAV_CAMERA_WIDTH: '640'
+      UAV_CAMERA_HEIGHT: '480'
+      UAV_CAMERA_RATE_HZ: '5'
+      UAV_CAMERA_FOV_RAD: '1.4'
+      UAV_CAMERA_BASELINE_M: '0.4'
+      UAV_CAMERA_HEIGHT_M: '0.5'
+      UAV_CAMERA_PITCH_RAD: '1.1'
+  replay-renderer:
+    environment:
+      UAV_REPLAY_NATIVE_COMPOSITE: 'true'
+      UAV_REPLAY_MODEL_ROOT: /assets
+      UAV_REPLAY_MODEL_REVISION_FILE: /assets/models-revision
+    volumes:
+      - ${UAV_REPLAY_ASSETS_DIRECTORY:?Set the retained revision-matched aircraft asset directory}:/assets:ro

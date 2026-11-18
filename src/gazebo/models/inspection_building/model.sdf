@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<sdf version="1.9">
+  <model name="inspection_building">
+    <static>true</static>
+    <pose>0 30 6 0 0 0</pose>
+    <link name="structure">
+      <collision name="walls_collision">
+        <geometry><box><size>12 12 12</size></box></geometry>
+      </collision>
+      <visual name="walls_visual">
+        <geometry><box><size>12 12 12</size></box></geometry>
+        <material><ambient>0.55 0.62 0.7 1</ambient><diffuse>0.55 0.62 0.7 1</diffuse></material>
+      </visual>
+      <visual name="south_marker">
+        <pose>0 -6.01 1 0 0 0</pose>
+        <geometry><box><size>3 0.03 5</size></box></geometry>
+        <material><ambient>0.95 0.55 0.1 1</ambient><diffuse>0.95 0.55 0.1 1</diffuse></material>
+      </visual>
+      <visual name="east_marker">
+        <pose>6.01 1 0 0 0 0</pose>
+        <geometry><box><size>0.03 4 2</size></box></geometry>
+        <material><ambient>0.1 0.6 0.5 1</ambient><diffuse>0.1 0.6 0.5 1</diffuse></material>
+      </visual>
+      <visual name="roof_marker">
+        <pose>0 0 6.01 0 0 0.4</pose>
+        <geometry><box><size>8 2 0.03</size></box></geometry>
+        <material><ambient>0.12 0.2 0.3 1</ambient><diffuse>0.12 0.2 0.3 1</diffuse></material>
+      </visual>
+    </link>
+  </model>
+</sdf>

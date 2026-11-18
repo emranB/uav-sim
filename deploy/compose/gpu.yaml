@@ -1,0 +1,26 @@
+# Opt-in NVIDIA graphics access. Validate on the target GPU host before use.
+x-gpu: &gpu
+  deploy:
+    resources:
+      reservations:
+        devices:
+          - driver: nvidia
+            count: 1
+            capabilities: [gpu]
+  environment:
+    UAV_RENDER_MODE: gpu
+    UAV_REAL_TIME_FACTOR: ${UAV_REAL_TIME_FACTOR:-1}
+    NVIDIA_DRIVER_CAPABILITIES: graphics,utility,compute,display
+    __GLX_VENDOR_LIBRARY_NAME: nvidia
+    __NV_PRIME_RENDER_OFFLOAD: '1'
+services:
+  control-panel:
+    environment:
+      UAV_RENDER_MODE: gpu
+      UAV_REAL_TIME_FACTOR: ${UAV_REAL_TIME_FACTOR:-1}
+  gazebo:
+    <<: *gpu
+  gazebo-viewer:
+    <<: *gpu
+  qgroundcontrol:
+    <<: *gpu

@@ -1,0 +1,6 @@
+# Apply only with inspection and mapping. Include these roles in UAV_RESTORE_SERVICES.
+services:
+  camera-streams:
+    command: [python, -m, common.lifecycle.supervisor, --role, camera-streams, --, python, -m, gazebo.camera_streams]
+  live-mapping:
+    command: [python, -m, common.lifecycle.supervisor, --role, live-mapping, --, python, -m, integrations.vision.live]

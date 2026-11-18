@@ -1,0 +1,4 @@
+#!/bin/sh
+command="$1"
+shift
+exec docker compose exec -T px4 "/opt/px4/build/px4_sitl_default/bin/px4-$command" "$@"

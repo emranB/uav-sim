@@ -1,0 +1,9 @@
+.git
+.venv
+outputs
+__pycache__
+.pytest_cache
+.ruff_cache
+.env
+final-combined
+docs/media

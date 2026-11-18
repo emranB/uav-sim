@@ -1,0 +1,5 @@
+ARG NATIVE_IMAGE=uav-sim-native-desktop:development
+FROM ${NATIVE_IMAGE}
+USER root
+RUN python -m pip install --no-cache-dir PySide6_Addons==6.8.3
+USER app

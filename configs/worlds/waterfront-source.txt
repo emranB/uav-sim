@@ -1,0 +1,8 @@
+Terrain source: Province of Nova Scotia, 2019 LiDAR DEM, sheet 1044600063500, project 201901.
+Source access: https://nsgi.novascotia.ca/datalocator/elevation/
+
+This product has been produced for the UAV Simulation Platform project and includes data provided by the Department of Service Nova Scotia.
+The incorporation of data sourced from the Department of Service Nova Scotia within this product shall not be construed as constituting an endorsement by the Department of Service Nova Scotia of our product.
+
+The source license, retained notices, warranty disclaimer and downstream distribution terms are in data-license.pdf. Keep that license with any distributed derived terrain and follow its applicable terms.
+Height data is modified by cropping and resampling. Display texture is synthetic; water values are not bathymetry.

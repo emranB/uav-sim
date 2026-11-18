@@ -1,0 +1,18 @@
+# Native Linux X11/XWayland wiring; provide display authorization on the host.
+x-display: &display
+  type: bind
+  source: /tmp/.X11-unix
+  target: /tmp/.X11-unix
+  read_only: true
+  bind:
+    create_host_path: false
+services:
+  desktop:
+    volumes:
+      - *display
+  qgroundcontrol:
+    volumes:
+      - *display
+  gazebo-viewer:
+    volumes:
+      - *display

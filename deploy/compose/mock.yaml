@@ -1,0 +1,28 @@
+name: uav-sim
+# Run from the repository with --project-directory . for root-relative mounts.
+services:
+  control-panel:
+    build:
+      context: .
+      dockerfile: src/control_panel/Dockerfile
+    command: python -m common.runtime
+    environment:
+      PYTHONPATH: /workspace/src
+      OUTPUT_DIR: /workspace/outputs
+      UAV_RENDER_MODE: ${UAV_RENDER_MODE:-cpu}
+      UAV_HEADLESS: ${UAV_HEADLESS:-true}
+      ROS_DOMAIN_ID: ${ROS_DOMAIN_ID:-42}
+      RMW_IMPLEMENTATION: ${RMW_IMPLEMENTATION:-rmw_fastrtps_cpp}
+    ports:
+      - "127.0.0.1:${BACKEND_PORT:-18080}:8080"
+    volumes:
+      - ./src:/workspace/src:ro
+      - ./configs:/workspace/configs:ro
+      - ${OUTPUTS_PATH:-./outputs}:/workspace/outputs
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8080/health')"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+    init: true
+    stop_grace_period: 10s

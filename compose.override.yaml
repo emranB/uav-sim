@@ -1,0 +1,18 @@
+# Default Windows/WSLg display wiring. Use deploy/compose/linux.yaml on native Linux.
+x-display: &display
+  type: bind
+  source: ${DISPLAY_SOCKET_PATH:-/mnt/host/wslg/.X11-unix}
+  target: /tmp/.X11-unix
+  read_only: true
+  bind:
+    create_host_path: false
+services:
+  desktop:
+    volumes:
+      - *display
+  qgroundcontrol:
+    volumes:
+      - *display
+  gazebo-viewer:
+    volumes:
+      - *display
